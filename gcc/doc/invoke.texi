@@ -15427,9 +15427,9 @@ at @option{-O2} and higher as well as @option{-Os}.
 Do not expand copies from constant data, such as a @code{memcpy} from a
 string literal or the initialization of a character array, into stores of
 immediate values.  The data is copied from the constant in memory instead,
-so that it stays intact in the object file.  This is useful when strings
-embedded in binaries are patched after compilation, for example to relocate
-installation paths.  The default is @option{-fstore-constants-by-pieces}.
+so that it stays intact in the object file.  This is useful when binaries
+are scanned for embedded strings, such as absolute paths.  The default is
+@option{-fstore-constants-by-pieces}.
 
 @opindex ftree-ter
 @opindex fno-tree-ter
