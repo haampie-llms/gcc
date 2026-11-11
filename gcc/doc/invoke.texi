@@ -681,7 +681,8 @@ Objective-C and Objective-C++ Dialects}.
 -fsingle-precision-constant  -fsplit-ivs-in-unroller  -fsplit-loops
 -fspeculatively-call-stored-functions
 -fsplit-wide-types  -fsplit-wide-types-early  -fssa-backprop  -fssa-phiopt
--fstdarg-opt  -fstore-merging  -fstrict-aliasing -fipa-strict-aliasing
+-fstdarg-opt  -fstore-constants-by-pieces  -fstore-merging
+-fstrict-aliasing -fipa-strict-aliasing
 -fthread-jumps  -ftracer  -ftree-bit-ccp
 -ftree-builtin-call-dce  -ftree-ccp  -ftree-ch  -ftree-coalesce-vars
 -ftree-copy-prop  -ftree-cselim  -ftree-dce  -ftree-dominator-opts
@@ -15419,6 +15420,16 @@ Perform merging of narrow stores to consecutive memory addresses.  This pass
 merges contiguous stores of immediate values narrower than a word into fewer
 wider stores to reduce the number of instructions.  This is enabled by default
 at @option{-O2} and higher as well as @option{-Os}.
+
+@opindex fstore-constants-by-pieces
+@opindex fno-store-constants-by-pieces
+@item -fno-store-constants-by-pieces
+Do not expand copies from constant data, such as a @code{memcpy} from a
+string literal or the initialization of a character array, into stores of
+immediate values.  The data is copied from the constant in memory instead,
+so that it stays intact in the object file.  This is useful when strings
+embedded in binaries are patched after compilation, for example to relocate
+installation paths.  The default is @option{-fstore-constants-by-pieces}.
 
 @opindex ftree-ter
 @opindex fno-tree-ter

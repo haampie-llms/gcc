@@ -1956,6 +1956,10 @@ fstrict-volatile-bitfields
 Common Var(flag_strict_volatile_bitfields) Init(-1) Optimization
 Force bitfield accesses to match their type width.
 
+fstore-constants-by-pieces
+Common Var(flag_store_constants_by_pieces) Init(1) Optimization
+Expand copies from constant data into stores of immediates.
+
 fstore-merging
 Common Var(flag_store_merging) Optimization
 Merge adjacent stores.

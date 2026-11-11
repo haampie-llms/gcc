@@ -1772,6 +1772,9 @@ can_store_by_pieces (unsigned HOST_WIDE_INT len,
   if (len == 0)
     return true;
 
+  if (!memsetp && !flag_store_constants_by_pieces)
+    return false;
+
   if (!targetm.use_by_pieces_infrastructure_p (len, align,
 					       memsetp
 						 ? SET_BY_PIECES
