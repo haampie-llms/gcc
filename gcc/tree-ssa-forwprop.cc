@@ -2286,6 +2286,10 @@ simplify_builtin_memcpy_memset (gimple_stmt_iterator *gsi_p, gcall *stmt2)
      handle embedded '\0's.  */
   if (strlen (src_buf) != src_len)
     return false;
+  /* Don't replace a string constant that has to stay intact by a new
+     string constant that includes the memset bytes.  */
+  if (str1 && !may_split_constant_p (src1, tree_to_uhwi (len1)))
+    return false;
   rtl_profile_for_bb (gimple_bb (stmt2));
   /* If the new memcpy wouldn't be emitted by storing the literal
      by pieces, this optimization might enlarge .rodata too much,

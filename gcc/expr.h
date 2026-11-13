@@ -337,6 +337,8 @@ extern tree string_constant (tree, tree *, tree *, tree *);
    to the value representation of the first argument if it's
    a constant.  */
 extern tree byte_representation (tree, tree *, tree *, tree *);
+/* Whether a constant may be copied or compared as pieces of its value.  */
+extern bool may_split_constant_p (tree, unsigned HOST_WIDE_INT);
 
 extern enum rtx_code convert_tree_comp_to_rtx (enum tree_code, int);
 extern enum tree_code maybe_optimize_mod_cmp (enum tree_code, tree *, tree *);

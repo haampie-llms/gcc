@@ -3797,6 +3797,7 @@ expand_builtin_memory_copy_args (tree dest, tree src, tree len,
   if (rep
       && CONST_INT_P (len_rtx)
       && (unsigned HOST_WIDE_INT) INTVAL (len_rtx) <= nbytes
+      && may_split_constant_p (src, INTVAL (len_rtx))
       && can_store_by_pieces (INTVAL (len_rtx), builtin_memcpy_read_str,
 			      const_cast<char *> (rep),
 			      dest_align, false))
@@ -4150,6 +4151,7 @@ expand_builtin_strncpy (tree exp, rtx target)
       rtx dest_mem;
 
       if (!p || dest_align == 0 || !tree_fits_uhwi_p (len)
+	  || !may_split_constant_p (src, tree_to_uhwi (len))
 	  || !can_store_by_pieces (tree_to_uhwi (len),
 				   builtin_strncpy_read_str,
 				   const_cast<char *> (p),
@@ -4922,7 +4924,10 @@ expand_builtin_memcmp (tree exp, rtx target, bool result_eq)
       /* For equality to zero the arguments are interchangeable.  */
       rep = getbyterep (arg1, &nbytes);
       if (rep != NULL)
-	std::swap (arg1_rtx, arg2_rtx);
+	{
+	  std::swap (arg1, arg2);
+	  std::swap (arg1_rtx, arg2_rtx);
+	}
     }
 
   /* If the function's constant bound LEN_RTX is less than or equal
@@ -4931,7 +4936,8 @@ expand_builtin_memcmp (tree exp, rtx target, bool result_eq)
      the bytes from memory and only store the computed constant result.  */
   if (rep
       && CONST_INT_P (len_rtx)
-      && (unsigned HOST_WIDE_INT) INTVAL (len_rtx) <= nbytes)
+      && (unsigned HOST_WIDE_INT) INTVAL (len_rtx) <= nbytes
+      && may_split_constant_p (arg2, INTVAL (len_rtx)))
     constfn = builtin_memcpy_read_str;
 
   result = emit_block_cmp_hints (arg1_rtx, arg2_rtx, len_rtx,

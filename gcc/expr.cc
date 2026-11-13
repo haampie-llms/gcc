@@ -6752,6 +6752,9 @@ store_expr (tree exp, rtx target, int call_param_p,
       if (TREE_STRING_LENGTH (str) <= 0)
 	goto normal_expr;
 
+      if (!may_split_constant_p (str, MIN (exp_len, TREE_STRING_LENGTH (str))))
+	goto normal_expr;
+
       if (can_store_by_pieces (exp_len, string_cst_read_str, (void *) str,
 			       MEM_ALIGN (target), false))
 	{
@@ -13541,6 +13544,22 @@ constant_byte_string (tree arg, tree *ptr_offset, tree *mem_size, tree *decl,
   gcc_checking_assert (tree_to_shwi (initsize) >= TREE_STRING_LENGTH (init));
 
   return init;
+}
+
+/* Return true if LEN bytes of the constant SRC, a STRING_CST or the address
+   of a constant, may be expanded into immediate or constant pool pieces
+   rather than read from SRC.  Return false for a string constant longer
+   than a word with -fno-split-string-constants, so that it stays intact in
+   the object file.  */
+
+bool
+may_split_constant_p (tree src, unsigned HOST_WIDE_INT len)
+{
+  if (flag_split_string_constants || len <= UNITS_PER_WORD)
+    return true;
+  tree offset;
+  return (TREE_CODE (src) != STRING_CST
+	  && !string_constant (src, &offset, NULL, NULL));
 }
 
 /* Return STRING_CST if an ARG corresponds to a string constant or zero
