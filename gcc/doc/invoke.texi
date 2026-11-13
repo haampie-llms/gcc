@@ -679,7 +679,7 @@ Objective-C and Objective-C++ Dialects}.
 -fsemantic-interposition  -fshrink-wrap  -fshrink-wrap-separate
 -fsignaling-nans
 -fsingle-precision-constant  -fsplit-ivs-in-unroller  -fsplit-loops
--fspeculatively-call-stored-functions
+-fspeculatively-call-stored-functions  -fsplit-string-constants
 -fsplit-wide-types  -fsplit-wide-types-early  -fssa-backprop  -fssa-phiopt
 -fstdarg-opt  -fstore-merging  -fstrict-aliasing -fipa-strict-aliasing
 -fthread-jumps  -ftracer  -ftree-bit-ccp
@@ -15411,6 +15411,16 @@ Perform scalar replacement of aggregates.  This pass replaces structure
 references with scalars to prevent committing structures to memory too
 early.  This flag is enabled by default at @option{-O1} and higher,
 except for @option{-Og}.
+
+@opindex fsplit-string-constants
+@opindex fno-split-string-constants
+@item -fno-split-string-constants
+When copying or comparing a string constant longer than a word inline,
+read its bytes from the string instead of expanding them into immediate
+operands or constant pool pieces, so that the string stays intact in the
+object file.  This helps tools that search binaries for strings such as
+absolute paths, or rewrite them in place.  @option{-fsplit-string-constants}
+is the default.
 
 @opindex fstore-merging
 @opindex fno-store-merging
